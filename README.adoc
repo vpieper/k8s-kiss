@@ -1,0 +1,29 @@
+# k8s-kiss
+
+## Before you get started
+
+I've been asked to talk a bit about Kubernetes. Hence, this Git repository and some slides. 
+
+This does not assume expert knowledge of Kubernetes, Docker, or anything related. It's fast paced, and I'll go into depth quite quickly. This is why I've also made a repository to consult after I've given my presentation.
+
+### Installing Kubernetes
+
+include::installation/installation.adoc[]
+
+## Some Theory
+
+### Introducting Kubernetes
+
+include::intro.adoc[]
+
+### What does Kubernetes offer you?
+
+include::what.adoc[]
+
+### How does Kubernetes achieve this?
+
+include::how.adoc[]
+
+## Let's do some Kubernetes
+
+Now we know what Kubernetes is, how it does it's thing, and why we want to use it, let's actually use it.

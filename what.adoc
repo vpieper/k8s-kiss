@@ -1,0 +1,20 @@
+Kubernetes promsies to provide the following features:
+
+* Service discovery and load balancing.
+* Storage orchestration.
+* Automated rollouts and rollbacks.
+* Automatic bin packaging.
+* Self-healing.
+* Secret and configuration management.
+
+So when we talk about these topics, we get a bit lost. I have an application, and I want it to run. Let's take a step back to the previous KISS session. Ben explained what a 12 factor application is.
+
+Looking at these topics, it promises to tackle a lot of the concerns described in Ben's presentation.
+
+Let me give you a quick introduction to three main concepts of Kubernetes.
+
+Kubernetes will take our application, and deploy it in a pod. A pod is a small abstraction which contains one or more containers, grouped together. These are run on the Kubernetes nodes, which will be managed by the control plane. More on that later.
+
+You can give Kubernetes a pod definition in yaml format, but you're better off taking the deployment route. These deployments will tell Kubernetes what you want, and it'll take care of the how. It'll schedule these pods according to your desires, and scale them as you see fit. 
+
+Finally, the last concept we use almost every time is a service. This is mainly a networking concept. A service is basically a definition of what traffic will be routed on which port, to which service. Given that we can label our pods, we can tell our services to scan for those labels and route accordingly, allowing a fairly straight forward service definition.

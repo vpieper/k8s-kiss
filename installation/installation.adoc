@@ -1,0 +1,24 @@
+
+I'm doing this KISS from Windows, while leveraging Docker for Desktop. I'm hopeful that the actions I do should be fine no matter what OS you are running.
+
+Docker for Desktop is available for both Windows and Mac. If you're running Linux, I'd refer you to install minikube. You can find minikube here: https://kubernetes.io/docs/tasks/tools/install-minikube/
+
+For an installation guide for Docker for Desktop, please refer to: https://www.docker.com/products/docker-desktop
+
+Once we finalized the installation, Kubernetes isn't installed out of the box. For this to happen, you'd have to enable it, which will take care of the installation for you. 
+
+Once running, click the Docker for Desktop icon in your system tray, and click settings. Once the Settings menu has opened, click on the Kubernetes tab. After, just click the "Enable Kubernetes" checkbox, and apply the changes. This will take some time, but then you're ready to go.
+
+To get some idea with what just happened, just execute a simple command
+
+`kubectl get all --all-namespaces`
+
+You should see an output similar as below.
+
+image::./installation/all-name-spaces.jpg[]
+
+Notice that you see an overview, with various resources prefixed with `pod`, `service`, `daemonset.apps`, `deployment.apps` and `replicaset.apps`.
+
+Pay specific attention to the pods wth the name `api-server`, `controller-manager`, `etcd` and `kube-scheduler`. These are the main parts of Kubernetes described earlier. 
+
+You're good to go! 

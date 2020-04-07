@@ -1,0 +1,31 @@
+So we covered what Kubernetes offers us, but how does it actually achieve this? 
+
+image::https://d33wubrfki0l68.cloudfront.net/7016517375d10c702489167e704dcb99e570df85/7bb53/images/docs/components-of-kubernetes.png[]
+
+This looks daunting. Let's give a small explanation of these components.
+
+#### kube-apiserver
+
+You'll be interacting with the api server almost 90% of the time. Your interactions with the command line tool will call the api server, which will further handle your requests.
+
+#### etcd
+
+Some of you may have heard about this. etcd is a simple key value store, excelling at being reliable at scale. This is a fully fledged product. You can find more info about etcd here: https://etcd.io/
+
+etcd is used as storage for all cluster information.
+
+
+#### kube-scheduler
+
+This component puts pods onto nodes.
+
+#### kube-controller-manager
+
+This is a composition of multiple dedicated controllers. These controllers have several tasks:
+
+* Node Controller: Manages lifecycle of nodes
+* Replication Controller: Manages the demand of replication within the cluster.
+* Endpoints Controller: Populates the Endpoints, which effectively links services to their assigned pods.
+* Service Account and Token Controllers: Manages accounts and namespaces. 
+
+It may be worth mentioning that Kubernetes is quite extendable. It allows for custom controllers, as well. A sample can be found here: https://github.com/kubernetes/sample-controller
