@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-map-app
+data:
+  application.properties: |-
+    app.message=Message from ConfigMap

@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: config-map-app
+  cloud:
+    kubernetes:
+      config:
+        name: ${spring.application.name}
+        enabled: true
+      reload:
+        enabled: true

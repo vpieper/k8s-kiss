@@ -1,0 +1,19 @@
+version: "3"
+
+services:
+  config-map-app:
+    image: joranbergfeld/config-map-app:v1
+    ports: 
+      - "8001:8080"
+    networks:
+      - example-network
+  environment-variable-app:
+    image: joranbergfeld/environment-variable-app:v1
+    ports: 
+      - "8002:8080"
+    networks:
+      - example-network
+    environment:
+      - APP_ENV_VAR=DOCKER_COMPOSE
+networks:
+  example-network:

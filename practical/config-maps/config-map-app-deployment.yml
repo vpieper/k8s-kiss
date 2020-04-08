@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: config-map-app
+  name: config-map-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-map-app
+  template:
+    metadata:
+      labels:
+        app: config-map-app
+    spec:
+      containers:
+      - image: joranbergfeld/config-map-app:v1
+        name: config-map-app
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-map-service
+  labels:
+    name: config-map-service
+spec:
+  type: NodePort
+  ports: 
+    - port: 8080
+      nodePort: 30001
+      name: http
+  selector:
+    app: config-map-app

@@ -1,0 +1,183 @@
+Now we know what Kubernetes is, how it does it's thing, and why we want to use it, let's actually use it.
+
+I've created several applications, which you can find in the `pracical` folder. I've also introduced several checkpoints, which you can find in corresponding `step` folders.
+
+The rough outline is that we will start off with a docker compose file, and transition to Kubernetes. For this I'll use kompose, a tool provided by Kubernetes to move from `docker-compose` into Kubernetes files. You can find more information about it here: https://github.com/kubernetes/kompose
+
+After that, I'll give you a quick runthrough multiple options you have when working with Kubernetes. The applications are small applications, which are supposed to introduce you to a single concept. 
+
+The following apps are in the `partical` folder:
+
+* environment-variable-app - Introducing a simple deployment.
+* config-map-app - Introducing config maps.
+* quotes-app - A small application which loads some quotes from the database, and displays a random quote whenever asked.
+
+### environment-variable-app
+
+This application is a rather simple app. It exposes two endpoints which we can use our browser to hit. One being `/message` and another being `/services`. The first reads an environment variable named `APP_ENV_VAR` and simply outputs it. The latter is a bit more complicated. It will read all the services it's able to detect from the Kubernetes API, and outputs them. Small note here, I apologize for the formatting. There's no clean split between all the services names, but I'm sure you'll get the gist.
+
+### config-map-app
+
+This application is almost a copy of the previous. However, instead of reading from an environment variable, it reads from an properties file. This is baked into the application, however, with the power of Kubernetes config maps we will push new configuration into the application, and it'll pick up a new message, refreshing the old one.
+
+### quotes-app
+
+This is a "real life" application which retrieves some information from a database, also deployed, and offers that through an API. 
+
+### Sample setup
+
+I've created a simple `docker-compose.yml` file to get both the services up and running. This is located in the `kompose` folder. More why it's called like that later. Simply run `docker-compose -f PATH_TO_COMPOSE_FILE up` to get it running. You'll be seeing the output of both applications.
+
+[NOTE]
+====
+Quite note for those willing to utilize their own Docker Hub account, and alter the apps. I've defaulted the compose file to the images I've pushed. You can push the images to your own repo using the bash script I provided, `build-and-push-all-apps.sh`. Just provide your username and password as arguments.
+====
+
+When having the apps up and running, you can visit the endpoints on `localhost:8001/message` and `localhost:8002/message`. 
+
+Let's quickly look at the compose file.
+
+```
+version: "3"
+
+services:
+  config-map-app:
+    image: joranbergfeld/config-map-app:v1
+    ports: 
+      - "8001:8080"
+    networks:
+      - example-network
+  environment-variable-app:
+    image: joranbergfeld/environment-variable-app:v1
+    ports: 
+      - "8002:8080"
+    networks:
+      - example-network
+    environment:
+      - APP_ENV_VAR=DOCKER_COMPOSE
+networks:
+  example-network:
+```
+
+The main thing to take away from this is the `services` part. We define a name for a service, for example `config-map-app`. After that, we define the image we want to take from Docker Hub. We define the port bindings, and the network it's connecting to. The main difference for the `environment-variable-app` is the `environment` clause, defining a environment variable so the message that this service provides is different.
+
+### Kompose
+
+I've seen many local deployment being done in Docker compose, where in the pipeline they're deployed onto Kubernetes. This at times causes some issues as Docker Compose ends up acting a bit different than Kubernetes itself. For this purpose Kubernetes has release a tool to quickly move towards Kubernetes locally, rather than Docker Compose: Kompose.
+
+This tool, as stated before, can be downloaded simply, and added to your path. I've done the same, as for demo purposes. The examples for this step are in the `kompose` folder.
+
+To run the tool, it's a simple `kompose convert -f docker-compose.yml`. It'll output all needed Kubernetes files to deploy these services.
+
+We can add these files to our locally installed Kubernetes by a simple `kubectl apply -f output`, assuming all your output is stored in the output folder just like this one.
+
+Let's see what we just gave to Kubernetes with `kubectl get all`.
+
+```
+joran@DESKTOP-8V8KV4D MINGW64 ~/VCS/KNMI/k8s-kiss/practical (master)
+$ kubectl get all
+NAME                                            READY   STATUS    RESTARTS   AGE
+pod/config-map-app-676cb66f59-5rhpr             1/1     Running   0          5s
+pod/environment-variable-app-7bb99c7984-ws5sl   1/1     Running   0          5s
+
+NAME                               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/config-map-app             ClusterIP   10.102.251.70   <none>        8001/TCP   5s
+service/environment-variable-app   ClusterIP   10.97.189.228   <none>        8002/TCP   5s
+service/kubernetes                 ClusterIP   10.96.0.1       <none>        443/TCP    45d
+
+NAME                                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/config-map-app             1/1     1            1           5s
+deployment.apps/environment-variable-app   1/1     1            1           5s
+
+NAME                                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/config-map-app-676cb66f59             1         1         1       5s
+replicaset.apps/environment-variable-app-7bb99c7984   1         1         1       5s
+
+```
+
+We see our pods, services, deployments and replicasets. Cool, but why does `localhost:8001/message` no longer work? This is because of the networking difference between Docker Compose and Kubernetes. Docker Compose exposes its containers simply. Kubernetes is a bit more tricky. This is because Kubernetes offers a lot more options when it comes to networking. You can imagine if you'd deploy Kubernetes on AWS, you'd like to utilize implementations offered by AWS, such as their load balancer implementation. 
+
+But to get back to the point where we can access the applications, we need to do a small change to our service file definitions. We need to add a bit more configuration to the service definitions.
+
+Services are our basic networking mechanism. A service definition is not that extensive, but can be made pretty complex to understand at face value. Like all definition files, it includes the usual keys like `kind`, `metadata` and `spec`. The main take away from a service definition is the `spec.type` key.
+
+This can hold the following values:
+
+* ClusterIP - Simply exposes the cluster internal IP. This is the default.
+* NodePort - Expose on each node's IP with the port defined. Considering we only have one node locally, it'll expose locally.
+* LoadBalancer - This is where we utilize cloud services.
+* ExternalName - This will actually map the service through use of a CNAME record.
+
+We won't cover the last two options, as they require a lot more setup. Feel free to read up and play around with them.
+
+So, to come back to our problem. We can see what, given that `ClusterIP` is the default, it will not expose it on the actual node. We want to do that, so let's get that going. Alter your services to include `type: NodePort`, as well as the `nodePort` property. The result should be similar to the below:
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.version: 1.21.0 (992df58d8)
+  labels:
+    io.kompose.service: config-map-app
+  name: config-map-app
+spec:
+  type: NodePort
+  ports:
+  - name: "8001"
+    nodePort: 30001
+    port: 8001
+    targetPort: 8080
+  selector:
+    io.kompose.service: config-map-app
+status:
+  loadBalancer: {}
+```
+
+You can find my examples in the `updated-services` folder. Apply these services over what you already have, and you should be able to access both services on `localhost:30001/message` and `localhost:30002/message`. 
+
+### Config Maps
+
+We had a working example deployment for both our services, but our `config-map-app` service does not get altered just yet. Let's delete our previous state, by checking out what we have with `kubectl get all`, and subsequentually `kubectl delete` on every resource previously created. 
+
+```
+kubectl delete deployment config-map-app
+kubectl delete deployment environment-variable-app 
+kubectl delete service config-map-app
+kubectl delete service environment-variable-app
+```
+
+After that, let's deploy a simplified version of the output of our previous kompose step. I supplied those files in the `config-maps` folder. Apply it by running `kubectl apply -f config-map-app-deployment.yml`. This will expose the application on port 30001 on your local machine. Once deployed, you can see it return it's default message.
+
+Let's change that.
+
+Let's take a look at config maps, which allow us to supply configuration to our application. While this also relies on some level of configuration on the application, that's already done with this application. If you're interested in this, please feel free to reach out to me.
+
+A config map it's purpose is to supply non-sensitive configuration information to your clusters. This can be utilized in whatever you need it from. These ConfigMaps have a seperate lifecycle than `pods` or `deployments`. ConfigMaps can supply key value pairs, or even files. In our example we supply `application.properties`, which is what our  application expects. 
+
+To see the magic in action, let's open our webbrowser, and go to `localhost:30001/message`. This should return a "Default Message". Let's apply the config map by `kubectl apply -f config-map-app-config-map.yml`. Once applied, refresh the web page, and it should greet you with an updated message. Feel free to change and play around with this as much as you want.
+
+### Scaling deployments
+
+### Autoscaling
+
+While not easily possible for the local installation, I thought it would be worth looking at Autoscaling as well. I recommend reading this blog post: https://kubernetes.io/blog/2016/07/autoscaling-in-kubernetes/ 
+
+The idea is that we can autoscale deployments rather simply.
+
+```
+apiVersion: autoscaling/v1
+kind: HorizontalPodAutoscaler
+metadata:
+  name: nginx
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: nginx
+  minReplicas: 1
+  maxReplicas: 10
+  targetCPUUtilizationPercentage: 50
+```
+
+After applying this to the cluster with `kubectl apply -f`, you can see the output through `kubectl get hpa`

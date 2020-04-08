@@ -27,5 +27,6 @@ This is a composition of multiple dedicated controllers. These controllers have 
 * Replication Controller: Manages the demand of replication within the cluster.
 * Endpoints Controller: Populates the Endpoints, which effectively links services to their assigned pods.
 * Service Account and Token Controllers: Manages accounts and namespaces. 
+* Cloud Controller: Integration with cloud providers. This allows you to use cloud services as part of Kubernetes.
 
 It may be worth mentioning that Kubernetes is quite extendable. It allows for custom controllers, as well. A sample can be found here: https://github.com/kubernetes/sample-controller

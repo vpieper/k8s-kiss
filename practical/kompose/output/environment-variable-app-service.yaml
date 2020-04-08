@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: environment-variable-app
+  name: environment-variable-app
+spec:
+  ports:
+  - name: "8002"
+    port: 8002
+    targetPort: 8080
+  selector:
+    io.kompose.service: environment-variable-app
+status:
+  loadBalancer: {}

@@ -26,4 +26,5 @@ include::how.adoc[]
 
 ## Let's do some Kubernetes
 
-Now we know what Kubernetes is, how it does it's thing, and why we want to use it, let's actually use it.
+include::practical.adoc[]
+

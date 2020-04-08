@@ -1,4 +1,4 @@
-Kubernetes promsies to provide the following features:
+Kubernetes promises to provide the following features:
 
 * Service discovery and load balancing.
 * Storage orchestration.

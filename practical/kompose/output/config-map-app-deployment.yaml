@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.version: 1.21.0 (992df58d8)
+  labels:
+    io.kompose.service: config-map-app
+  name: config-map-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: config-map-app
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.version: 1.21.0 (992df58d8)
+      labels:
+        io.kompose.network/example-network: "true"
+        io.kompose.service: config-map-app
+    spec:
+      containers:
+      - image: joranbergfeld/config-map-app:v1
+        imagePullPolicy: ""
+        name: config-map-app
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}

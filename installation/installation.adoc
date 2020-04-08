@@ -19,6 +19,6 @@ image::./installation/all-name-spaces.jpg[]
 
 Notice that you see an overview, with various resources prefixed with `pod`, `service`, `daemonset.apps`, `deployment.apps` and `replicaset.apps`.
 
-Pay specific attention to the pods wth the name `api-server`, `controller-manager`, `etcd` and `kube-scheduler`. These are the main parts of Kubernetes described earlier. 
+Pay specific attention to the pods wth the name `api-server`, `controller-manager`, `etcd` and `kube-scheduler`. These are the main parts of Kubernetes. 
 
 You're good to go! 

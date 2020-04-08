@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.version: 1.21.0 (992df58d8)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: environment-variable-app
+  name: environment-variable-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: environment-variable-app
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.version: 1.21.0 (992df58d8)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/example-network: "true"
+        io.kompose.service: environment-variable-app
+    spec:
+      containers:
+      - env:
+        - name: APP_ENV_VAR
+          value: DOCKER_COMPOSE
+        image: joranbergfeld/environment-variable-app:v1
+        imagePullPolicy: ""
+        name: environment-variable-app
+        ports:
+        - containerPort: 8080
+        resources: {}
+      restartPolicy: Always
+      serviceAccountName: ""
+      volumes: null
+status: {}
