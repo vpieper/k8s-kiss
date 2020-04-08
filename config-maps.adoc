@@ -1,0 +1,19 @@
+
+We had a working example deployment for both our services, but our `config-map-app` service does not get altered just yet. Let's delete our previous state, by checking out what we have with `kubectl get all`, and subsequentually `kubectl delete` on every resource previously created. 
+
+```
+kubectl delete deployment config-map-app
+kubectl delete deployment environment-variable-app 
+kubectl delete service config-map-app
+kubectl delete service environment-variable-app
+```
+
+After that, let's deploy a simplified version of the output of our previous kompose step. I supplied those files in the `config-maps` folder. Apply it by running `kubectl apply -f config-map-app-deployment.yml`. This will expose the application on port 30001 on your local machine. Once deployed, you can see it return it's default message.
+
+Let's change that.
+
+Let's take a look at config maps, which allow us to supply configuration to our application. While this also relies on some level of configuration on the application, that's already done with this application. If you're interested in this, please feel free to reach out to me.
+
+A config map it's purpose is to supply non-sensitive configuration information to your clusters. This can be utilized in whatever you need it from. These ConfigMaps have a seperate lifecycle than `pods` or `deployments`. ConfigMaps can supply key value pairs, or even files. In our example we supply `application.properties`, which is what our  application expects. 
+
+To see the magic in action, let's open our webbrowser, and go to `localhost:30001/message`. This should return a "Default Message". Let's apply the config map by `kubectl apply -f config-map-app-config-map.yml`. Once applied, refresh the web page, and it should greet you with an updated message. Feel free to change and play around with this as much as you want.

@@ -1,0 +1,34 @@
+I've created a simple `docker-compose.yml` file to get both the services up and running. This is located in the `kompose` folder. More why it's called like that later. Simply run `docker-compose -f PATH_TO_COMPOSE_FILE up` to get it running. You'll be seeing the output of both applications.
+
+[NOTE]
+====
+Quite note for those willing to utilize their own Docker Hub account, and alter the apps. I've defaulted the compose file to the images I've pushed. You can push the images to your own repo using the bash script I provided, `build-and-push-all-apps.sh`. Just provide your username and password as arguments.
+====
+
+When having the apps up and running, you can visit the endpoints on `localhost:8001/message` and `localhost:8002/message`. 
+
+Let's quickly look at the compose file.
+
+```
+version: "3"
+
+services:
+  config-map-app:
+    image: joranbergfeld/config-map-app:v1
+    ports: 
+      - "8001:8080"
+    networks:
+      - example-network
+  environment-variable-app:
+    image: joranbergfeld/environment-variable-app:v1
+    ports: 
+      - "8002:8080"
+    networks:
+      - example-network
+    environment:
+      - APP_ENV_VAR=DOCKER_COMPOSE
+networks:
+  example-network:
+```
+
+The main thing to take away from this is the `services` part. We define a name for a service, for example `config-map-app`. After that, we define the image we want to take from Docker Hub. We define the port bindings, and the network it's connecting to. The main difference for the `environment-variable-app` is the `environment` clause, defining a environment variable so the message that this service provides is different.

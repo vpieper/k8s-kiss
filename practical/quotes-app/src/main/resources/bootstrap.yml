@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: quotes-app
+  cloud:
+    kubernetes:
+      secrets:
+        name: db-secret
+      config:
+        name: ${spring.application.name}
+        enabled: true
+      reload:
+        enabled: true
+  data:
+    mongodb:
+      host: mongodb-service
+      port: 27017
+      database: admin
+      username: ${MONGO_USERNAME}
+      password: ${MONGO_PASSWORD}

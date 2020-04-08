@@ -1,0 +1,44 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: quotes-app-service
+spec:
+  selector:
+    app: quotes-app-service
+  ports:
+  - protocol: TCP
+    port: 8080
+    nodePort: 30003
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: quotes-app
+spec:
+  selector:
+      matchLabels:
+        app: quotes-app-service
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: quotes-app-service
+    spec:
+      containers:
+        - name: quotes-app
+          image: joranbergfeld/quotes-app:v1
+          imagePullPolicy: Never
+          ports:
+          - containerPort: 8080
+          env:
+            - name: MONGO_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: username
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: db-secret
+                  key: password

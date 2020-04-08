@@ -1,0 +1,73 @@
+
+I've seen many local deployment being done in Docker compose, where in the pipeline they're deployed onto Kubernetes. This at times causes some issues as Docker Compose ends up acting a bit different than Kubernetes itself. For this purpose Kubernetes has release a tool to quickly move towards Kubernetes locally, rather than Docker Compose: Kompose.
+
+This tool, as stated before, can be downloaded simply, and added to your path. I've done the same, as for demo purposes. The examples for this step are in the `kompose` folder.
+
+To run the tool, it's a simple `kompose convert -f docker-compose.yml`. It'll output all needed Kubernetes files to deploy these services.
+
+We can add these files to our locally installed Kubernetes by a simple `kubectl apply -f output`, assuming all your output is stored in the output folder just like this one.
+
+Let's see what we just gave to Kubernetes with `kubectl get all`.
+
+```
+joran@DESKTOP-8V8KV4D MINGW64 ~/VCS/KNMI/k8s-kiss/practical (master)
+$ kubectl get all
+NAME                                            READY   STATUS    RESTARTS   AGE
+pod/config-map-app-676cb66f59-5rhpr             1/1     Running   0          5s
+pod/environment-variable-app-7bb99c7984-ws5sl   1/1     Running   0          5s
+
+NAME                               TYPE        CLUSTER-IP      EXTERNAL-IP   PORT(S)    AGE
+service/config-map-app             ClusterIP   10.102.251.70   <none>        8001/TCP   5s
+service/environment-variable-app   ClusterIP   10.97.189.228   <none>        8002/TCP   5s
+service/kubernetes                 ClusterIP   10.96.0.1       <none>        443/TCP    45d
+
+NAME                                       READY   UP-TO-DATE   AVAILABLE   AGE
+deployment.apps/config-map-app             1/1     1            1           5s
+deployment.apps/environment-variable-app   1/1     1            1           5s
+
+NAME                                                  DESIRED   CURRENT   READY   AGE
+replicaset.apps/config-map-app-676cb66f59             1         1         1       5s
+replicaset.apps/environment-variable-app-7bb99c7984   1         1         1       5s
+
+```
+
+We see our pods, services, deployments and replicasets. Cool, but why does `localhost:8001/message` no longer work? This is because of the networking difference between Docker Compose and Kubernetes. Docker Compose exposes its containers simply. Kubernetes is a bit more tricky. This is because Kubernetes offers a lot more options when it comes to networking. You can imagine if you'd deploy Kubernetes on AWS, you'd like to utilize implementations offered by AWS, such as their load balancer implementation. 
+
+But to get back to the point where we can access the applications, we need to do a small change to our service file definitions. We need to add a bit more configuration to the service definitions.
+
+Services are our basic networking mechanism. A service definition is not that extensive, but can be made pretty complex to understand at face value. Like all definition files, it includes the usual keys like `kind`, `metadata` and `spec`. The main take away from a service definition is the `spec.type` key.
+
+This can hold the following values:
+
+* ClusterIP - Simply exposes the cluster internal IP. This is the default.
+* NodePort - Expose on each node's IP with the port defined. Considering we only have one node locally, it'll expose locally.
+* LoadBalancer - This is where we utilize cloud services.
+* ExternalName - This will actually map the service through use of a CNAME record.
+
+We won't cover the last two options, as they require a lot more setup. Feel free to read up and play around with them.
+
+So, to come back to our problem. We can see what, given that `ClusterIP` is the default, it will not expose it on the actual node. We want to do that, so let's get that going. Alter your services to include `type: NodePort`, as well as the `nodePort` property. The result should be similar to the below:
+
+```
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    kompose.version: 1.21.0 (992df58d8)
+  labels:
+    io.kompose.service: config-map-app
+  name: config-map-app
+spec:
+  type: NodePort
+  ports:
+  - name: "8001"
+    nodePort: 30001
+    port: 8001
+    targetPort: 8080
+  selector:
+    io.kompose.service: config-map-app
+status:
+  loadBalancer: {}
+```
+
+You can find my examples in the `updated-services` folder. Apply these services over what you already have, and you should be able to access both services on `localhost:30001/message` and `localhost:30002/message`. 
