@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
+    kompose.cmd: C:\Users\joran\kompose\kompose.exe convert -f docker-compose.yml
+      --out output/
     kompose.version: 1.21.0 (992df58d8)
   creationTimestamp: null
   labels:
@@ -16,10 +18,11 @@ spec:
   template:
     metadata:
       annotations:
+        kompose.cmd: C:\Users\joran\kompose\kompose.exe convert -f docker-compose.yml
+          --out output/
         kompose.version: 1.21.0 (992df58d8)
       creationTimestamp: null
       labels:
-        io.kompose.network/example-network: "true"
         io.kompose.service: environment-variable-app
     spec:
       containers:

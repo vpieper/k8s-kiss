@@ -30,3 +30,10 @@ This is a composition of multiple dedicated controllers. These controllers have 
 * Cloud Controller: Integration with cloud providers. This allows you to use cloud services as part of Kubernetes.
 
 It may be worth mentioning that Kubernetes is quite extendable. It allows for custom controllers, as well. A sample can be found here: https://github.com/kubernetes/sample-controller
+
+
+#### cloud-controller-manager
+
+This part of the control plane is optional. As you can imagine, with our local installation we do not have a cloud controller. These are to integrate the `cloud-controller-manager`, `kube-api-server` and the individual `kubelet` with the cloud provider for several concerns, such as load balancing and storage.
+
+For example: https://github.com/kubernetes/cloud-provider-aws

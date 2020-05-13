@@ -2,12 +2,12 @@ We all heard the hype of Kubernetes. But how did it come to be? I wanted to quic
 
 Initially we deployed our applications onto the OS. We installed the required libraries, and ran the application. This was all fine and dandy, up to the point where we required isolation of libraries and optimal usage of hardware resources.
 
-This is where we invented virtual machine. We seperated libraries and resources over various machines. We ran into the problem that a virtual machine was always tied to an OS, and they were pretty big.
+This is where we invented virtual machine. We separated libraries and resources over various machines. We ran into the problem that a virtual machine was always tied to an OS, and they were pretty big.
 
 So the solution is where we are at now: Containers. Quite simply put: they are smaller and OS independent.
 
 image::https://d33wubrfki0l68.cloudfront.net/26a177ede4d7b032362289c6fccd448fc4a91174/eb693/images/docs/container_evolution.svg[Evolution of application deployment]
 
-Containers are now used, often at such a scale that you have thousands of containers. This poses a different kind of problem, being managability. 
+Containers are now used, often at such a scale that you have thousands of containers. This poses a different kind of problem, being manageability. 
 
 This is why we are now talking about Kubernetes. Kubernetes promises to relieve you many struggles you'd have running a fleet of containers.

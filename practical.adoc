@@ -160,7 +160,21 @@ So in a manner of seconds, we have added another four pods, each with the applic
 
 While not easily possible for the local installation, I thought it would be worth looking at Autoscaling as well. I recommend reading this blog post: https://kubernetes.io/blog/2016/07/autoscaling-in-kubernetes/ 
 
-The idea is that we can autoscale deployments rather simply.
+As part of the AWS cluster script, it also installs the metrics server. So, if you have your kubectl context setup for EKS, you can follow along. 
+
+Let's create a deployment based on example provided in the blog.
+
+```
+kubectl run php-apache --image=gcr.io/google_containers/hpa-example --requests=cpu=500m,memory=500M --expose --port=80
+```
+
+While inspecting this deployment, we just see a single deployment and pod. Let's configure this deployment to scale automatically, depending on the load. 
+
+```
+kubectl autoscale deployment php-apache --cpu-percent=50 --min=1 --max=10
+
+```
+We could of course do this through yaml as well.
 
 ```
 apiVersion: autoscaling/v1
@@ -177,4 +191,11 @@ spec:
   targetCPUUtilizationPercentage: 50
 ```
 
-After applying this to the cluster with `kubectl apply -f`, you can see the output through `kubectl get hpa`
+Let's quickly check what the status of the autoscaler is. We can do this through `kubectl get hpa`.
+
+To generate some load for the deployment, open a command prompt, and run the following.
+
+```
+kubectl run busybox --image=busybox:latest --rm -it --restart=Never
+while true; do wget -q -O- http://php-apache.default.svc.cluster.local; done
+```
