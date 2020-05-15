@@ -1,10 +1,8 @@
-# k8s-kiss
+# Kubernetes: Zero to hero
 
 ## Before you get started
 
-I've been asked to talk a bit about Kubernetes. Hence, this Git repository and some slides. 
-
-This does not assume expert knowledge of Kubernetes, Docker, or anything related. It's fast paced, and I'll go into depth quite quickly. This is why I've also made a repository to consult after I've given my presentation.
+Because I will be going through the content rather quickly, I've prepared this git repository so you can follow along, or check it out after. The content does not assume knowledge of Kubernetes. Some basic knowledge of Docker is required. The applications I will be using for most of the examples will be written in Java. Please feel free to play around with these applications.
 
 ### Installing Kubernetes
 

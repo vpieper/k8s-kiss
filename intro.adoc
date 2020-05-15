@@ -1,4 +1,4 @@
-We all heard the hype of Kubernetes. But how did it come to be? I wanted to quickly walk through how we got here, talking about Kubernetes.
+We all heard the hype of Kubernetes. But how did it come to be? Why would you even care? I wanted to quickly walk through how we got to the buzzword Kubernetes.
 
 Initially we deployed our applications onto the OS. We installed the required libraries, and ran the application. This was all fine and dandy, up to the point where we required isolation of libraries and optimal usage of hardware resources.
 

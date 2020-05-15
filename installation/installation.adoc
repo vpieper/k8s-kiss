@@ -1,17 +1,11 @@
 
-I'm doing this from Windows, while leveraging Docker for Desktop. I'm hopeful that the actions I do should be fine no matter what OS you are running.
+Kubernetes could be quite cumbersome to install. However, as it's an open source project. There are a lot of tools to get it installed. If you're running Windows or Mac, I'd suggest you use Docker for Desktop. It's incredibly easy to setup, and costs you nothing. For an installation guide for Docker for Desktop, please refer to: https://www.docker.com/products/docker-desktop. If you're running Linux, I'd refer you to install minikube. You can find minikube here: https://kubernetes.io/docs/tasks/tools/install-minikube/
 
-Docker for Desktop is available for both Windows and Mac. If you're running Linux, I'd refer you to install minikube. You can find minikube here: https://kubernetes.io/docs/tasks/tools/install-minikube/
-
-For an installation guide for Docker for Desktop, please refer to: https://www.docker.com/products/docker-desktop
-
-Once we finalized the installation, Kubernetes isn't installed out of the box. For this to happen, you'd have to enable it, which will take care of the installation for you. 
-
-Once running, click the Docker for Desktop icon in your system tray, and click settings. Once the Settings menu has opened, click on the Kubernetes tab. After, just click the "Enable Kubernetes" checkbox, and apply the changes. This will take some time, but then you're ready to go.
+Once you finalized the installation of Docker for Desktop, Kubernetes isn't installed out of the box. For this to happen, you'd have to enable it, which will take care of the installation for you. Once running, click the Docker for Desktop icon in your system tray, and click settings. Once the Settings menu has opened, click on the Kubernetes tab. After, just click the "Enable Kubernetes" checkbox, and apply the changes. This will take some time, but then you're ready to go.
 
 Of course, you can utilize the cloud managed services. I've supplied a sample script which you could utilize for AWS. Small note, it requires you to have a few things set up prio. Run it with a `--help` parameter to see what's required.
 
-To get some idea with what just happened, just execute a simple command
+To make sure your configuration and installation has gone all fine, just execute a simple command
 
 `kubectl get all --all-namespaces`
 
