@@ -1,6 +1,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
+  namespace: a1
   name: config-map-app
 data:
   application.properties: |-

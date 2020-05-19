@@ -1,6 +1,7 @@
 kind: Service
 apiVersion: v1
 metadata:
+  namespace: quotes
   name: quotes-app-service
 spec:
   selector:
@@ -14,6 +15,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: quotes
   name: quotes-app
 spec:
   selector:
@@ -28,7 +30,6 @@ spec:
       containers:
         - name: quotes-app
           image: joranbergfeld/quotes-app:v1
-          imagePullPolicy: Never
           ports:
           - containerPort: 8080
           env:

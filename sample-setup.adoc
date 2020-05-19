@@ -17,18 +17,12 @@ services:
     image: joranbergfeld/config-map-app:v1
     ports: 
       - "8001:8080"
-    networks:
-      - example-network
   environment-variable-app:
     image: joranbergfeld/environment-variable-app:v1
     ports: 
       - "8002:8080"
-    networks:
-      - example-network
     environment:
       - APP_ENV_VAR=DOCKER_COMPOSE
-networks:
-  example-network:
 ```
 
 The main thing to take away from this is the `services` part. We define a name for a service, for example `config-map-app`. After that, we define the image we want to take from Docker Hub. We define the port bindings, and the network it's connecting to. The main difference for the `environment-variable-app` is the `environment` clause, defining a environment variable so the message that this service provides is different.

@@ -1,6 +1,26 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: a1
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: example-do-not-use-in-prod
+  namespace: a1
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: view
+subjects:
+- kind: ServiceAccount
+  name: default
+  namespace: a1
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: a1
   labels:
     app: config-map-app
   name: config-map-app
@@ -21,6 +41,7 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
+  namespace: a1
   name: config-map-service
   labels:
     name: config-map-service

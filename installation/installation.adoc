@@ -3,7 +3,7 @@ Kubernetes could be quite cumbersome to install. However, as it's an open source
 
 Once you finalized the installation of Docker for Desktop, Kubernetes isn't installed out of the box. For this to happen, you'd have to enable it, which will take care of the installation for you. Once running, click the Docker for Desktop icon in your system tray, and click settings. Once the Settings menu has opened, click on the Kubernetes tab. After, just click the "Enable Kubernetes" checkbox, and apply the changes. This will take some time, but then you're ready to go.
 
-Of course, you can utilize the cloud managed services. I've supplied a sample script which you could utilize for AWS. Small note, it requires you to have a few things set up prio. Run it with a `--help` parameter to see what's required.
+Of course, you can utilize the cloud managed services. I've supplied a sample script which you could utilize for AWS. Small note, it requires you to have a few things set up prio. Run it with a `--help` parameter to see what's required. For Azure, I have another script. This is a low input one, only requiring you to have the Azure CLI installed, as well as being authenticated. 
 
 To make sure your configuration and installation has gone all fine, just execute a simple command
 

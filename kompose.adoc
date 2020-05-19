@@ -3,7 +3,7 @@ I've seen many local deployment being done in Docker compose, where in the pipel
 
 This tool, as stated before, can be downloaded simply, and added to your path. I've done the same, as for demo purposes. The examples for this step are in the `kompose` folder.
 
-To run the tool, it's a simple `kompose convert -f docker-compose.yml`. It'll output all needed Kubernetes files to deploy these services.
+To run the tool, it's a simple `kompose convert -f docker-compose.yml --out output`. It'll output all needed Kubernetes files to deploy these services.
 
 We can add these files to our locally installed Kubernetes by a simple `kubectl apply -f output`, assuming all your output is stored in the output folder just like this one.
 

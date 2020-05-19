@@ -103,7 +103,8 @@ echo "Updating your kubeconfig to point towards the newly created cluster."
 aws eks update-kubeconfig \
     --profile $1 \
     --region eu-west-1 \
-    --name $2
+    --name $2 \
+    --alias $2
 
 echo ""
 echo "Installing metrics server onto your newly deployed cluster."
